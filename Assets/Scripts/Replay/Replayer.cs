@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-public class Replayer : IPlay
+public class Replayer : IPlayer
 {
     Queue<Frame> queframe = new Queue<Frame>();
     string filePath;
@@ -27,11 +27,13 @@ public class Replayer : IPlay
         {
             queframe.Enqueue(frame);
         }
+        GameMgr.Instance.ResetAllUnit();
     }
 
     public void Stop()
     {
         isPlaying = false;
+        GameMgr.Instance.ResetAllUnit();
     }
 
     public void Update()

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class Recorder : IPlay
+public class Recorder : IPlayer
 {
     List<Frame> listFrame = new List<Frame>();
     int count;

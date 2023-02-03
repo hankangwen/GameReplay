@@ -29,25 +29,24 @@ public class GameMgr : MonoSingleton<GameMgr>
     {
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            if(PlayMode == PlayMode.Record)
-            {
-                recorder.Play();
-            }
-            else
-            {
-                replayer.Play();
-            }
+            OnInput(1);
         }
         else if (Input.GetKeyUp(KeyCode.F2))
         {
-            if (PlayMode == PlayMode.Record)
-            {
-                recorder.Stop();
-            }
-            else
-            {
-                replayer.Stop();
-            }
+            OnInput(2);
+        }
+    }
+
+    void OnInput(int type)
+    {
+        IPlayer player = PlayMode == PlayMode.Record ? recorder : replayer;
+        if (type == 1)
+        {
+            player.Play();
+        }
+        else
+        {
+            player.Stop();
         }
     }
 
@@ -99,6 +98,15 @@ public class GameMgr : MonoSingleton<GameMgr>
         recorder.Record(cmd, unit.UnitId);
     }
 
+    public void ResetAllUnit()
+    {
+        var dictUnit = UnitMgr.Instance.GetAllUnit();
+        foreach (var item in dictUnit)
+        {
+            item.Value.ResetUnit();
+        }
+    }
+
     public void Replay(Frame frame)
     {
         MonoHelper.Debug($"执行指令：{frame.Id} {frame.Cmd}");
@@ -134,7 +142,7 @@ public enum PlayMode
     Replay,
 }
 
-public interface IPlay
+public interface IPlayer
 {
     public void Init(string fileName);
     public void Play();

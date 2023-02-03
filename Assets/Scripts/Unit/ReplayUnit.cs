@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ReplayUnit : RecordUnit
 {
-    Vector3 velocity;
     CmdListener listener = new CmdListener();
+    Vector3 velocity;
     public override void Awake()
     {
         base.Awake();
@@ -16,6 +16,14 @@ public class ReplayUnit : RecordUnit
     private void FixedUpdate()
     {
         transform.position += velocity;
+    }
+
+    /// <summary>
+    /// 重新播放时用于重置数据
+    /// </summary>
+    public void ResetUnit()
+    {
+        velocity = Vector3.zero;
     }
 
     private void DoPosCmd(PosCmd posCmd)
