@@ -29,19 +29,25 @@ public class GameMgr : MonoSingleton<GameMgr>
     {
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            recorder.Play();
+            if(PlayMode == PlayMode.Record)
+            {
+                recorder.Play();
+            }
+            else
+            {
+                replayer.Play();
+            }
         }
         else if (Input.GetKeyUp(KeyCode.F2))
         {
-            recorder.Stop();
-        }
-        else if (Input.GetKeyUp(KeyCode.F11))
-        {
-            replayer.Play();
-        }
-        else if (Input.GetKeyUp(KeyCode.F12))
-        {
-            replayer.Stop();
+            if (PlayMode == PlayMode.Record)
+            {
+                recorder.Stop();
+            }
+            else
+            {
+                replayer.Stop();
+            }
         }
     }
 
@@ -104,16 +110,21 @@ public class GameMgr : MonoSingleton<GameMgr>
         }
 
         CmdEnum type = (CmdEnum)frame.Cmd;
+        ICommand cmd = null;
         if (type == CmdEnum.Pos)
         {
-            var cmd = JsonConvert.DeserializeObject<PosCmd>(frame.Data);
-            unit.ReplayPos(cmd);
+            cmd = JsonConvert.DeserializeObject<PosCmd>(frame.Data);
         }
         else if (type == CmdEnum.Move)
         {
-            var cmd = JsonConvert.DeserializeObject<MoveCmd>(frame.Data);
-            unit.ReplayMove(cmd);
+            cmd = JsonConvert.DeserializeObject<MoveCmd>(frame.Data);
         }
+        if (cmd == null)
+        {
+            MonoHelper.Error($"指令反序列化失败 {frame.Id} {frame.Cmd}");
+            return;
+        }
+        unit.DoCmd(type, cmd);
     }
 }
 
