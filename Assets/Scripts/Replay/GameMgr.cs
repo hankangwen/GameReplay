@@ -3,13 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using TMPro;
 
 public class GameMgr : MonoSingleton<GameMgr>
 {
     public PlayMode PlayMode;
     public string FileName;
+    public TMP_Text gameTips;
     Recorder recorder = new Recorder();
     Replayer replayer = new Replayer();
+
 
     protected override void Init()
     {
@@ -18,10 +21,12 @@ public class GameMgr : MonoSingleton<GameMgr>
         if (PlayMode == PlayMode.Record)
         {
             recorder.Init(filePath);
+            gameTips.text = "按下F1开始录制，按下F2停止录制";
         }
         else
         {
             replayer.Init(filePath);
+            gameTips.text = "按下F1开始播放，按下F2停止播放";
         }
     }
 
